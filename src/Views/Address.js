@@ -5,32 +5,69 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  PermissionsAndroid,
 } from 'react-native';
-
-export default class Address extends PureComponent {
+import {connect} from 'react-redux';
+class Address extends PureComponent {
+  requestReadSmsPermission = async () => {
+    try {
+      var granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_SMS,
+        {
+          title: '阅读短信',
+          message: '需要获取阅读短信权限',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+          {
+            title: '接收短信',
+            message: '需要获取接收短信权限',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('RECEIVE_SMS permissions granted', granted);
+        } else {
+          console.log('RECEIVE_SMS permissions denied');
+        }
+      } else {
+        console.log('sms read permissions denied');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  testPress = () => {
+    this.requestReadSmsPermission();
+  };
+  loginPress = () => {
+    this.props.dispatch({
+      type: 'login',
+    });
+  };
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 网关: </Text>
-          <TextInput style={styles.inputText} placeholder="asdfasdf" />
+          <TextInput style={styles.inputText} placeholder="请输入网关" />
         </View>
         <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 令牌: </Text>
-          <TextInput style={styles.inputText} placeholder="asdfasdf" />
+          <TextInput
+            style={styles.inputText}
+            placeholder="请输入令牌(没有令牌请联系我们)"
+          />
         </View>
         <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 权限: </Text>
-          <TouchableOpacity style={styles.authBtn}>
-            <Text style={{lineHeight: 40, color: '#0984e3'}}>
-              点击获取短信权限
-            </Text>
+          <TouchableOpacity style={styles.authBtn} onPress={this.testPress}>
+            <Text style={styles.authBtnTxt}>点击获取短信权限</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.logBtn}>
-          <Text style={{lineHeight: 50, color: '#fff', fontSize: 16}}>
-            登录
-          </Text>
+        <TouchableOpacity style={styles.logBtn} onPress={this.loginPress}>
+          <Text style={styles.loginTxt}>登录</Text>
         </TouchableOpacity>
       </View>
     );
@@ -89,4 +126,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  authBtnTxt: {
+    lineHeight: 40,
+    color: '#0984e3',
+  },
+  loginTxt: {
+    lineHeight: 50,
+    color: '#fff',
+    fontSize: 16,
+  },
 });
+
+export default connect()(Address);

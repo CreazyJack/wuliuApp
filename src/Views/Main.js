@@ -1,14 +1,9 @@
 import React, {PureComponent} from 'react';
-import {
-  Text,
-  View,
-  Alert,
-  PermissionsAndroid,
-  StyleSheet,
-  FlatList,
-} from 'react-native';
-import SmsAndroid from 'react-native-get-sms-android';
+import {Text, View, StyleSheet} from 'react-native';
+// import SmsAndroid from 'react-native-get-sms-android';
 import {HomeList} from '../Components';
+import {connect} from 'react-redux';
+import SmsListener from 'react-native-android-sms-listener';
 /* ----------------------- 获取全部短信列表 -----------------------*/
 // var filter = {
 //   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -53,45 +48,29 @@ import {HomeList} from '../Components';
 //   },
 // );
 
-export default class Main extends PureComponent {
-  requestReadSmsPermission = async () => {
-    try {
-      var granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_SMS,
-        {
-          title: '阅读短信',
-          message: '需要获取阅读短信权限',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-          {
-            title: '接收短信',
-            message: '需要获取接收短信权限',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('RECEIVE_SMS permissions granted', granted);
-        } else {
-          console.log('RECEIVE_SMS permissions denied');
-        }
-      } else {
-        console.log('sms read permissions denied');
-      }
-    } catch (err) {
-      console.log(err);
-    }
+class Main extends PureComponent {
+  listenMsg = () => {
+    SmsListener.addListener((message) => {
+      console.log(message);
+      this.props.dispatch({
+        type: 'addMessage',
+        data: message,
+      });
+    });
   };
+  componentDidMount() {
+    this.listenMsg();
+  }
   testPress = () => {
-    this.requestReadSmsPermission();
+    this.props.dispatch({
+      type: 'logout',
+    });
   };
-
   render() {
     return (
       <View style={styles.container}>
         <Text onPress={this.testPress}> 已监听短信: </Text>
-        <HomeList tagList={[1, 2, 3, 4, 5, 6]} />
+        <HomeList tagList={this.props.mainReducer.data} />
       </View>
     );
   }
@@ -100,8 +79,9 @@ export default class Main extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: '#fff',
   },
 });
+
+const mapState = (state) => state;
+export default connect(mapState)(Main);
