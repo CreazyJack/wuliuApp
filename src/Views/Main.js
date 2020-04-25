@@ -4,6 +4,8 @@ import SmsAndroid from 'react-native-get-sms-android';
 import {HomeList} from '../Components';
 import {connect} from 'react-redux';
 import SmsListener from 'react-native-android-sms-listener';
+
+// console.log(subscription);
 /* ----------------------- 获取全部短信列表 -----------------------*/
 var filter = {
   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -21,7 +23,7 @@ var filter = {
   // bodyRegex: '(.*)How are you(.*)', // content regex to match
 
   /** the next 5 filters should NOT be used together, they are OR-ed so pick one **/
-  read: 0, // 0 for unread SMS, 1 for SMS already read
+  // read: 0, // 0 for unread SMS, 1 for SMS already read
   // _id: 1234, // specify the msg id
   // thread_id: 12, // specify the conversation thread_id
   // address: '+1888------', // sender's phone number
@@ -32,47 +34,55 @@ var filter = {
 };
 
 class Main extends PureComponent {
-  listenMsg = () => {
-    SmsListener.addListener((message) => {
-      console.log(message);
-      this.props.dispatch({
-        type: 'addMessage',
-        data: message,
-      });
+  constructor() {
+    super();
+    this.state = {
+      msgNum: 0,
+    };
+    this.subscription = SmsListener.addListener((message) => {
+      console.log('msg', message);
+      this.getMsgList();
     });
-  };
+  }
+
   getMsgList = () => {
     SmsAndroid.list(
       JSON.stringify(filter),
       (fail) => {
-        // console.log('Failed with this error: ' + fail);
+        console.log('Failed with this error: ' + fail);
       },
       (count, smsList) => {
-        // console.log('Count: ', count);
-        // console.log('List: ', smsList);
+        this.setState({msgNum: count});
         var arr = JSON.parse(smsList);
-
-        arr.forEach(function (object) {
-          // console.log('Object: ' + object);
-          // console.log('-->' + object.date);
-          // console.log('-->' + object.body);
+        let newArr = arr.map((item) => {
+          return {
+            time: item.data,
+            body: item.body,
+            address: item.address,
+          };
+        });
+        this.props.dispatch({
+          type: 'addMessage',
+          data: newArr,
         });
       },
     );
   };
-  componentDidMount() {
-    this.listenMsg();
-  }
+
   testPress = () => {
     this.props.dispatch({
       type: 'logout',
     });
   };
+  componentDidMount() {}
+  componentWillUnmount() {
+    this.subscription.remove();
+  }
   render() {
     return (
       <View style={styles.container}>
         <Text onPress={this.testPress}> 已监听短信: </Text>
-        <Text onPress={this.getMsgList}> 已获取短信: </Text>
+        <Text onPress={this.getMsgList}> 已获取短信: {this.state.msgNum}</Text>
         <HomeList tagList={this.props.mainReducer.data} />
       </View>
     );

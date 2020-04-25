@@ -10,11 +10,11 @@ import {
 
 export default function* mainSaga() {
   yield console.log('this is mainSaga!');
-  yield takeLatest('addMessage', function* () {
-    const mainReducer = yield select((state) => state.mainReducer);
-    yield put({
-      type: 'latestData',
-      data: mainReducer,
-    });
-  });
+  // yield takeLatest('addMessage', function* () {
+  //   const mainReducer = yield select((state) => state.mainReducer);
+  //   yield put({
+  //     type: 'latestData',
+  //     data: mainReducer,
+  //   });
+  // });
 }

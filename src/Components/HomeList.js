@@ -3,7 +3,7 @@ import {Text, View, FlatList, StyleSheet} from 'react-native';
 
 export default class HomeList extends PureComponent {
   render() {
-    // console.log(this.props.tagList);
+    console.log(this.props.tagList);
     return (
       <FlatList
         style={styles.container}
@@ -16,7 +16,6 @@ export default class HomeList extends PureComponent {
 }
 
 function TagBox({item}) {
-  // console.log(item);
   return <Text style={styles.itemTxt}>{item.body}</Text>;
 }
 
@@ -26,8 +25,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemTxt: {
-    // borderColor: '#ecf0ff',
-    // borderWidth: 1,
     padding: 10,
     borderRadius: 5,
     marginBottom: 5,
