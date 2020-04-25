@@ -1,21 +1,23 @@
 import 'react-native-gesture-handler';
 import {SafeAreaView, StyleSheet, StatusBar} from 'react-native';
-import SmsListener from 'react-native-android-sms-listener';
 import Views from './src/Views';
 import React, {PureComponent} from 'react';
+import {Provider} from 'react-redux';
+import {store, persistor} from './src/redux/store';
+import {PersistGate} from 'redux-persist/integration/react';
 
-SmsListener.addListener((message) => {
-  console.log(message);
-});
 export default class App extends PureComponent {
   render() {
+    console.log(this.props.store);
     return (
-      <>
+      <Provider store={store}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
         <StatusBar barStyle="dark-content" />
         <SafeAreaView style={styles.container}>
           <Views />
         </SafeAreaView>
-      </>
+        {/* </PersistGate> */}
+      </Provider>
     );
   }
 }
