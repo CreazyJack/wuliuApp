@@ -51,7 +51,6 @@ class index extends PureComponent {
               headerLeftContainerStyle: {},
               headerRightContainerStyle: {},
             }}>
-            <Stack.Screen name="SplashView" component={SplashView} />
             <Stack.Screen
               name="Address"
               component={Address}

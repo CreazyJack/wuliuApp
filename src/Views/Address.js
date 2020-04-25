@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 class Address extends PureComponent {
+  state = {
+    btnTxt: '点击获取短信权限',
+  };
   requestReadSmsPermission = async () => {
     try {
       var granted = await PermissionsAndroid.request(
@@ -28,6 +31,7 @@ class Address extends PureComponent {
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           console.log('RECEIVE_SMS permissions granted', granted);
+          this.setState({btnTxt: '已获取'});
         } else {
           console.log('RECEIVE_SMS permissions denied');
         }
@@ -63,7 +67,7 @@ class Address extends PureComponent {
         <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 权限: </Text>
           <TouchableOpacity style={styles.authBtn} onPress={this.testPress}>
-            <Text style={styles.authBtnTxt}>点击获取短信权限</Text>
+            <Text style={styles.authBtnTxt}>{this.state.btnTxt}</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.logBtn} onPress={this.loginPress}>

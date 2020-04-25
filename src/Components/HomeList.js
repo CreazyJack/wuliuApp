@@ -3,7 +3,7 @@ import {Text, View, FlatList, StyleSheet} from 'react-native';
 
 export default class HomeList extends PureComponent {
   render() {
-    console.log(this.props.tagList);
+    // console.log(this.props.tagList);
     return (
       <FlatList
         style={styles.container}
@@ -16,7 +16,7 @@ export default class HomeList extends PureComponent {
 }
 
 function TagBox({item}) {
-  console.log(item);
+  // console.log(item);
   return <Text style={styles.itemTxt}>{item.body}</Text>;
 }
 
