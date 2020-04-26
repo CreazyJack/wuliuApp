@@ -1,5 +1,6 @@
 const initState = {
   isLogin: false,
+  hasRegister: false,
   data: [],
 };
 
@@ -19,6 +20,16 @@ export default (state = initState, action) => {
       return {
         ...state,
         isLogin: false,
+      };
+    case 'registerJob':
+      return {
+        ...state,
+        hasRegister: true,
+      };
+    case 'cancelJob':
+      return {
+        ...state,
+        hasRegister: false,
       };
     default:
       return state;

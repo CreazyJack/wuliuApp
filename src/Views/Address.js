@@ -1,4 +1,5 @@
-import React, {PureComponent} from 'react';
+// eslint-disable-next-line prettier/prettier
+import React, { PureComponent } from 'react';
 import {
   Text,
   View,

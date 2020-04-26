@@ -1,20 +1,23 @@
+/* eslint-disable prettier/prettier */
 import React, {PureComponent} from 'react';
-import {Text, View, StyleSheet, AppState, Button} from 'react-native';
+import {Text, View, StyleSheet, AppState, Button, Modal} from 'react-native';
 import SmsAndroid from 'react-native-get-sms-android';
 import {HomeList} from '../Components';
 import {connect} from 'react-redux';
 import SmsListener from 'react-native-android-sms-listener';
 import BackgroundJob from 'react-native-background-job';
+import BackgroundTimer from 'react-native-background-timer';
 
-const test = {
-  jobKey: 'myJob',
-  job: () =>
-    setInterval(() => {
-      console.log(1);
-    }, 1000),
-};
-BackgroundJob.register(test);
-
+// const test = {
+//   jobKey: 'myJob',
+//   job: () => {
+//     let a = 1;
+//     setInterval(() => {
+//       console.log(++a);
+//     }, 1000);
+//   },
+// };
+// BackgroundJob.register(test);
 /* ----------------------- 获取全部短信列表 -----------------------*/
 var filter = {
   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -48,6 +51,7 @@ class Main extends PureComponent {
     this.state = {
       msgNum: 0,
       appState: AppState.currentState,
+      modalVisible: false,
     };
     this.subscription = SmsListener.addListener((message) => {
       // console.log('msg', message);
@@ -56,7 +60,6 @@ class Main extends PureComponent {
   }
 
   getMsgList = () => {
-    console.log('获取所有短信');
     SmsAndroid.list(
       JSON.stringify(filter),
       (fail) => {
@@ -64,14 +67,19 @@ class Main extends PureComponent {
       },
       (count, smsList) => {
         this.setState({msgNum: count});
+        console.log('获取所有短信', count);
+
         var arr = JSON.parse(smsList);
+        // console.log(arr);
         let newArr = arr.map((item) => {
           return {
-            time: item.data,
+            id: item._id,
+            time: item.date,
             body: item.body,
             address: item.address,
           };
         });
+        console.log(newArr);
         this.props.dispatch({
           type: 'addMessage',
           data: newArr,
@@ -87,15 +95,41 @@ class Main extends PureComponent {
   };
 
   _handleAppStateChange = (nextAppState) => {
-    if (this.state.appState.match(/background/)) {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
       console.log('App has come to the foreground!');
       this.getMsgList();
     }
     this.setState({appState: nextAppState});
   };
 
+  registerJob = () => {
+    console.log(this.props.mainReducer.hasRegister);
+    if (!this.props.mainReducer.hasRegister) {
+      let a = 1;
+      const intervalId = BackgroundTimer.setInterval(() => {
+        // this will be executed every 200 ms
+        // even when app is the the background
+        this.getMsgList();
+        console.log('timer', ++a);
+      }, 2000);
+      this.props.dispatch({
+        type: 'registerJob',
+      });
+    }
+    return;
+  };
+  cancelJob = () => {
+    if (!this.props.mainReducer.hasRegister) {
+      BackgroundTimer.stop();
+    }
+    return;
+  };
   componentDidMount() {
-    this.backgroundJob;
+    // this.cancelJob();
+    this.registerJob();
     AppState.addEventListener('change', this._handleAppStateChange);
   }
 
@@ -108,14 +142,30 @@ class Main extends PureComponent {
     return (
       <View style={styles.container}>
         {/* <Text onPress={this.testPress}> 已监听短信: </Text> */}
-        <Text onPress={this.getMsgList}> 已获取短信: {this.state.msgNum}</Text>
+        <View style={styles.btn}>
+          <Button
+            title={`已获取短信(${this.state.msgNum})`}
+            onPress={() => this.setState({modalVisible: true})}
+          />
+        </View>
         <View style={styles.btn}>
           <Button title="获取所有短信" onPress={this.getMsgList} />
         </View>
         <View style={styles.btn}>
           <Button title="点击上传" onPress={() => console.log('已上传')} />
         </View>
-        {/* <HomeList tagList={this.props.mainReducer.data} /> */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+            this.setState({modalVisible: false});
+          }}>
+          <View style={styles.container}>
+            <HomeList tagList={this.props.mainReducer.data} />
+          </View>
+        </Modal>
       </View>
     );
   }
