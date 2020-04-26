@@ -1,9 +1,9 @@
 package com.smstest;
-
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.pilloxa.backgroundjob.BackgroundJobPackage;
 import com.react.SmsPackage;
 import com.centaurwarchief.smslistener.SmsListenerPackage;
 import com.facebook.react.ReactInstanceManager;

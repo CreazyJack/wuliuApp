@@ -1,11 +1,20 @@
 import React, {PureComponent} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, AppState, Button} from 'react-native';
 import SmsAndroid from 'react-native-get-sms-android';
 import {HomeList} from '../Components';
 import {connect} from 'react-redux';
 import SmsListener from 'react-native-android-sms-listener';
+import BackgroundJob from 'react-native-background-job';
 
-// console.log(subscription);
+const test = {
+  jobKey: 'myJob',
+  job: () =>
+    setInterval(() => {
+      console.log(1);
+    }, 1000),
+};
+BackgroundJob.register(test);
+
 /* ----------------------- 获取全部短信列表 -----------------------*/
 var filter = {
   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -38,14 +47,16 @@ class Main extends PureComponent {
     super();
     this.state = {
       msgNum: 0,
+      appState: AppState.currentState,
     };
     this.subscription = SmsListener.addListener((message) => {
-      console.log('msg', message);
+      // console.log('msg', message);
       this.getMsgList();
     });
   }
 
   getMsgList = () => {
+    console.log('获取所有短信');
     SmsAndroid.list(
       JSON.stringify(filter),
       (fail) => {
@@ -74,16 +85,37 @@ class Main extends PureComponent {
       type: 'logout',
     });
   };
-  componentDidMount() {}
+
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/background/)) {
+      console.log('App has come to the foreground!');
+      this.getMsgList();
+    }
+    this.setState({appState: nextAppState});
+  };
+
+  componentDidMount() {
+    this.backgroundJob;
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
   componentWillUnmount() {
     this.subscription.remove();
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text onPress={this.testPress}> 已监听短信: </Text>
+        {/* <Text onPress={this.testPress}> 已监听短信: </Text> */}
         <Text onPress={this.getMsgList}> 已获取短信: {this.state.msgNum}</Text>
-        <HomeList tagList={this.props.mainReducer.data} />
+        <View style={styles.btn}>
+          <Button title="获取所有短信" onPress={this.getMsgList} />
+        </View>
+        <View style={styles.btn}>
+          <Button title="点击上传" onPress={() => console.log('已上传')} />
+        </View>
+        {/* <HomeList tagList={this.props.mainReducer.data} /> */}
       </View>
     );
   }
@@ -93,6 +125,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  btn: {
+    marginVertical: 10,
+    width: '80%',
   },
 });
 

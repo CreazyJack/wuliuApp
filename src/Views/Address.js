@@ -8,10 +8,12 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import {connect} from 'react-redux';
+
 class Address extends PureComponent {
   state = {
     btnTxt: '点击获取短信权限',
   };
+
   requestReadSmsPermission = async () => {
     try {
       var granted = await PermissionsAndroid.request(
@@ -42,14 +44,17 @@ class Address extends PureComponent {
       console.log(err);
     }
   };
+
   testPress = () => {
     this.requestReadSmsPermission();
   };
+
   loginPress = () => {
     this.props.dispatch({
       type: 'login',
     });
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -61,7 +66,7 @@ class Address extends PureComponent {
           <Text style={styles.inputLabel}> 令牌: </Text>
           <TextInput
             style={styles.inputText}
-            placeholder="请输入令牌(没有令牌请联系我们)"
+            placeholder="没有令牌请联系我们"
           />
         </View>
         <View style={styles.inputBox}>
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
     height: 40,
     lineHeight: 40,
     flex: 1,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#0984e3',

@@ -1,7 +1,6 @@
 import Main from './Main';
-// import MsgAuthority from './MsgAuthority';
 import Address from './Address';
-import SplashView from './SplashView';
+// import SplashView from './SplashView';
 import React, {PureComponent} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';

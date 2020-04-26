@@ -8,7 +8,6 @@ import {PersistGate} from 'redux-persist/integration/react';
 
 export default class App extends PureComponent {
   render() {
-    console.log(this.props.store);
     return (
       <Provider store={store}>
         {/* <PersistGate loading={null} persistor={persistor}> */}

@@ -4,5 +4,6 @@
     "persistor",
     "unmount",
     "will"
-  ]
+  ],
+  "java.configuration.updateBuildConfiguration": "disabled"
 }

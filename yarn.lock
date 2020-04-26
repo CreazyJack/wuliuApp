@@ -11438,6 +11438,11 @@ react-native-android-sms-listener@^0.7.0:
   resolved "https://registry.yarnpkg.com/react-native-android-sms-listener/-/react-native-android-sms-listener-0.7.0.tgz#f5ffab7a825f07ee0928dad40a9ef3dbbebc8724"
   integrity sha512-XRQzTW08UJe0rGTXF4JGJefLqPqlg4+zUMErYJhA+1cSkUBS3NHLzzl1MTDn9/3GVdFV2aPmAceZ9mSmtSozwg==
 
+react-native-background-job@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.npm.taobao.org/react-native-background-job/download/react-native-background-job-2.3.1.tgz#c9aa299d9ffb40b84a3156dec5fa40a604a9462b"
+  integrity sha1-yaopnZ/7QLhKMVbexfpApgSpRis=
+
 react-native-gesture-handler@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
