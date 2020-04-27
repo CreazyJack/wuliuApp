@@ -68,7 +68,6 @@ class Main extends PureComponent {
       (count, smsList) => {
         this.setState({msgNum: count});
         console.log('获取所有短信', count);
-
         var arr = JSON.parse(smsList);
         // console.log(arr);
         let newArr = arr.map((item) => {
@@ -79,7 +78,7 @@ class Main extends PureComponent {
             address: item.address,
           };
         });
-        console.log(newArr);
+        // console.log(newArr);
         this.props.dispatch({
           type: 'addMessage',
           data: newArr,
@@ -135,7 +134,7 @@ class Main extends PureComponent {
 
   componentWillUnmount() {
     this.subscription.remove();
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    // AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   render() {
