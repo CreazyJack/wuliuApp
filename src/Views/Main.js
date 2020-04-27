@@ -69,7 +69,7 @@ class Main extends PureComponent {
         this.setState({msgNum: count});
         console.log('获取所有短信', count);
         var arr = JSON.parse(smsList);
-        // console.log(arr);
+        console.log(arr[0]);
         let newArr = arr.map((item) => {
           return {
             id: item._id,
@@ -113,7 +113,7 @@ class Main extends PureComponent {
         // even when app is the the background
         this.getMsgList();
         console.log('timer', ++a);
-      }, 2000);
+      }, 5000);
       this.props.dispatch({
         type: 'registerJob',
       });
