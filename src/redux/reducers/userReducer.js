@@ -1,25 +1,31 @@
 const initState = {
   isLogin: false,
-  hasRegister: false,
+  isFirstScreen: true,
   data: [],
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case 'addMessage':
+    case 'login':
       return {
         ...state,
-        data: [...action.data],
+        isLogin: true,
       };
-    case 'registerJob':
+    case 'logout':
       return {
         ...state,
-        hasRegister: true,
+        isLogin: false,
       };
-    case 'cancelJob':
+    case 'goLoginScreen':
       return {
         ...state,
-        hasRegister: false,
+        isFirstScreen: false,
+      };
+    case 'goMainScreen':
+      return {
+        ...state,
+        isFirstScreen: false,
+        isLogin: true,
       };
     default:
       return state;

@@ -1,6 +1,6 @@
 import Main from './Main';
 import Address from './Address';
-// import SplashView from './SplashView';
+import SplashView from './SplashView';
 import React, {PureComponent} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
@@ -10,23 +10,24 @@ const Stack = createStackNavigator();
 
 class index extends PureComponent {
   render() {
+    const screenOptions = {
+      headerStyle: {
+        backgroundColor: '#0984e3',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerTitleAlign: 'center',
+      headerLeftContainerStyle: {},
+      headerRightContainerStyle: {},
+    };
     return (
       <NavigationContainer>
-        {this.props.mainReducer.isLogin ? (
+        {this.props.userReducer.isLogin ? (
           <Stack.Navigator
             initialRouteName="Main"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: '#0984e3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerTitleAlign: 'center',
-              headerLeftContainerStyle: {},
-              headerRightContainerStyle: {},
-            }}>
+            screenOptions={screenOptions}>
             <Stack.Screen
               name="Main"
               component={Main}
@@ -35,21 +36,22 @@ class index extends PureComponent {
               })}
             />
           </Stack.Navigator>
+        ) : this.props.userReducer.isFirstScreen ? (
+          <Stack.Navigator
+            initialRouteName="SplashView"
+            screenOptions={screenOptions}>
+            <Stack.Screen
+              name="SplashView"
+              component={SplashView}
+              options={({navigation}) => ({
+                headerShown: false,
+              })}
+            />
+          </Stack.Navigator>
         ) : (
           <Stack.Navigator
             initialRouteName="Address"
-            screenOptions={{
-              headerStyle: {
-                backgroundColor: '#0984e3',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-              headerTitleAlign: 'center',
-              headerLeftContainerStyle: {},
-              headerRightContainerStyle: {},
-            }}>
+            screenOptions={screenOptions}>
             <Stack.Screen
               name="Address"
               component={Address}
@@ -57,7 +59,6 @@ class index extends PureComponent {
                 title: '登录',
               })}
             />
-            {/* <Stack.Screen name="MsgAuthority" component={MsgAuthority} /> */}
           </Stack.Navigator>
         )}
       </NavigationContainer>

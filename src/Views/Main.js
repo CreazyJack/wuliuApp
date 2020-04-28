@@ -1,13 +1,13 @@
-/* eslint-disable prettier/prettier */
 import React, {PureComponent} from 'react';
-import {Text, View, StyleSheet, AppState, Button, Modal} from 'react-native';
+import {View, StyleSheet, AppState, Button, Modal} from 'react-native';
 import SmsAndroid from 'react-native-get-sms-android';
 import {HomeList} from '../Components';
 import {connect} from 'react-redux';
-import SmsListener from 'react-native-android-sms-listener';
-import BackgroundJob from 'react-native-background-job';
+// import SmsListener from 'react-native-android-sms-listener';
+// import BackgroundJob from 'react-native-background-job';
 import BackgroundTimer from 'react-native-background-timer';
 
+/* ----------------------- 注册后台任务（暂未实现） -----------------------*/
 // const test = {
 //   jobKey: 'myJob',
 //   job: () => {
@@ -18,6 +18,7 @@ import BackgroundTimer from 'react-native-background-timer';
 //   },
 // };
 // BackgroundJob.register(test);
+
 /* ----------------------- 获取全部短信列表 -----------------------*/
 var filter = {
   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -49,14 +50,47 @@ class Main extends PureComponent {
   constructor() {
     super();
     this.state = {
-      msgNum: 0,
+      // msgNum: 0,
       appState: AppState.currentState,
       modalVisible: false,
     };
-    this.subscription = SmsListener.addListener((message) => {
-      // console.log('msg', message);
-      this.getMsgList();
-    });
+    // this.subscription = SmsListener.addListener((message) => {
+    //   // console.log('msg', message);
+    //   this.getMsgList();
+    // });
+  }
+
+  render() {
+    const listArr = this.props.mainReducer.data;
+    return (
+      <View style={styles.container}>
+        {/* <Text onPress={this.testPress}> 已监听短信: </Text> */}
+        <View style={styles.btn}>
+          <Button
+            title={`已获取短信(${listArr.length})`}
+            onPress={() => this.setState({modalVisible: true})}
+          />
+        </View>
+        <View style={styles.btn}>
+          <Button title="获取所有短信" onPress={this.getMsgList} />
+        </View>
+        <View style={styles.btn}>
+          <Button title="点击上传" onPress={() => console.log('已上传')} />
+        </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            console.log('Modal has been closed.');
+            this.setState({modalVisible: false});
+          }}>
+          <View style={styles.container}>
+            <HomeList tagList={listArr} />
+          </View>
+        </Modal>
+      </View>
+    );
   }
 
   getMsgList = () => {
@@ -66,7 +100,7 @@ class Main extends PureComponent {
         console.log('Failed with this error: ' + fail);
       },
       (count, smsList) => {
-        this.setState({msgNum: count});
+        // this.setState({msgNum: count});
         console.log('获取所有短信', count);
         var arr = JSON.parse(smsList);
         console.log(arr[0]);
@@ -93,16 +127,17 @@ class Main extends PureComponent {
     });
   };
 
-  _handleAppStateChange = (nextAppState) => {
-    if (
-      this.state.appState.match(/inactive|background/) &&
-      nextAppState === 'active'
-    ) {
-      console.log('App has come to the foreground!');
-      this.getMsgList();
-    }
-    this.setState({appState: nextAppState});
-  };
+  /* ------- 监听前后台状态变化 ------- */
+  // _handleAppStateChange = (nextAppState) => {
+  //   if (
+  //     this.state.appState.match(/inactive|background/) &&
+  //     nextAppState === 'active'
+  //   ) {
+  //     console.log('App has come to the foreground!');
+  //     this.getMsgList();
+  //   }
+  //   this.setState({appState: nextAppState});
+  // };
 
   registerJob = () => {
     console.log(this.props.mainReducer.hasRegister);
@@ -127,46 +162,15 @@ class Main extends PureComponent {
     return;
   };
   componentDidMount() {
-    // this.cancelJob();
     this.registerJob();
-    AppState.addEventListener('change', this._handleAppStateChange);
+    /* ------- 监听前后台状态变化 ------- */
+    // AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentWillUnmount() {
-    this.subscription.remove();
+    // this.subscription.remove();
+    /* ------- 监听前后台状态变化 ------- */
     // AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        {/* <Text onPress={this.testPress}> 已监听短信: </Text> */}
-        <View style={styles.btn}>
-          <Button
-            title={`已获取短信(${this.state.msgNum})`}
-            onPress={() => this.setState({modalVisible: true})}
-          />
-        </View>
-        <View style={styles.btn}>
-          <Button title="获取所有短信" onPress={this.getMsgList} />
-        </View>
-        <View style={styles.btn}>
-          <Button title="点击上传" onPress={() => console.log('已上传')} />
-        </View>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            console.log('Modal has been closed.');
-            this.setState({modalVisible: false});
-          }}>
-          <View style={styles.container}>
-            <HomeList tagList={this.props.mainReducer.data} />
-          </View>
-        </Modal>
-      </View>
-    );
   }
 }
 

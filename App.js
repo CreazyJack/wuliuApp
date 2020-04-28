@@ -10,12 +10,12 @@ export default class App extends PureComponent {
   render() {
     return (
       <Provider store={store}>
-        {/* <PersistGate loading={null} persistor={persistor}> */}
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView style={styles.container}>
-          <Views />
-        </SafeAreaView>
-        {/* </PersistGate> */}
+        <PersistGate loading={null} persistor={persistor}>
+          <StatusBar barStyle="dark-content" />
+          <SafeAreaView style={styles.container}>
+            <Views />
+          </SafeAreaView>
+        </PersistGate>
       </Provider>
     );
   }

@@ -30,8 +30,9 @@ function TagBox({item}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     padding: 10,
+    width: '100%',
   },
   itemTxt: {
     // padding: 10,
