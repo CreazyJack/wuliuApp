@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "smsTest-tvOS.app"
-               BlueprintName = "smsTest-tvOS"
-               ReferencedContainer = "container:smsTest.xcodeproj">
+               BuildableName = "xinzhihuiwuliu-tvOS.app"
+               BlueprintName = "xinzhihuiwuliu-tvOS"
+               ReferencedContainer = "container:xinzhihuiwuliu.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "smsTest-tvOSTests.xctest"
-               BlueprintName = "smsTest-tvOSTests"
-               ReferencedContainer = "container:smsTest.xcodeproj">
+               BuildableName = "xinzhihuiwuliu-tvOSTests.xctest"
+               BlueprintName = "xinzhihuiwuliu-tvOSTests"
+               ReferencedContainer = "container:xinzhihuiwuliu.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "smsTest-tvOS.app"
-            BlueprintName = "smsTest-tvOS"
-            ReferencedContainer = "container:smsTest.xcodeproj">
+            BuildableName = "xinzhihuiwuliu-tvOS.app"
+            BlueprintName = "xinzhihuiwuliu-tvOS"
+            ReferencedContainer = "container:xinzhihuiwuliu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "smsTest-tvOS.app"
-            BlueprintName = "smsTest-tvOS"
-            ReferencedContainer = "container:smsTest.xcodeproj">
+            BuildableName = "xinzhihuiwuliu-tvOS.app"
+            BlueprintName = "xinzhihuiwuliu-tvOS"
+            ReferencedContainer = "container:xinzhihuiwuliu.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -11,20 +11,21 @@ import {
   AsyncStorage,
 } from 'react-native';
 import {connect} from 'react-redux';
-import axios from 'axios';
+import axios from 'react-native-axios';
 
 class Address extends PureComponent {
   state = {
     btnTxt: '点击获取短信权限',
     token: '',
+    test: '还未请求数据',
   };
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.inputBox}>
+        {/* <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 网关: </Text>
           <TextInput style={styles.inputText} placeholder="请输入网关" />
-        </View>
+        </View> */}
         <View style={styles.inputBox}>
           <Text style={styles.inputLabel}> 令牌: </Text>
           <TextInput
@@ -42,6 +43,9 @@ class Address extends PureComponent {
         <TouchableOpacity style={styles.logBtn} onPress={this.loginPress}>
           <Text style={styles.loginTxt}>登录</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.logBtn} onPress={this.fetchTest}>
+          <Text style={styles.loginTxt}>测试</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -50,32 +54,62 @@ class Address extends PureComponent {
     // this.sendData();
   }
 
+  fetchTest = () => {
+    return fetch('http://rap2.taobao.org:38080/app/mock/251021/app/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        token: 'test123456',
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.isUser) {
+          console.log(res);
+          this.setState({test: '请求数据成功！'});
+          this._storeData(this.state.token);
+          this.props.dispatch({
+            type: 'login',
+          });
+        } else {
+          Alert.alert('登录失败，请重新登录！');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   requestReadSmsPermission = async () => {
     try {
       var granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_SMS,
-        {
-          title: '阅读短信',
-          message: '需要获取阅读短信权限',
-        },
+        // {
+        //   title: '阅读短信',
+        //   message: '需要获取阅读短信权限',
+        // },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-          {
-            title: '接收短信',
-            message: '需要获取接收短信权限',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('RECEIVE_SMS permissions granted', granted);
-          this.setState({btnTxt: '已获取'});
-        } else {
-          console.log('RECEIVE_SMS permissions denied');
-        }
-      } else {
-        console.log('sms read permissions denied');
+        this.setState({btnTxt: '已获取'});
       }
+      // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      //   granted = await PermissionsAndroid.request(
+      //     PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+      //     {
+      //       title: '接收短信',
+      //       message: '需要获取接收短信权限',
+      //     },
+      //   );
+      //   if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      //     console.log('RECEIVE_SMS permissions granted', granted);
+      //     this.setState({btnTxt: '已获取'});
+      //   } else {
+      //     console.log('RECEIVE_SMS permissions denied');
+      //   }
+      // } else {
+      //   console.log('sms read permissions denied');
+      // }
     } catch (err) {
       console.log(err);
     }
@@ -85,11 +119,12 @@ class Address extends PureComponent {
     this.requestReadSmsPermission();
   };
 
+  // 点击登录
   loginPress = () => {
-    if (this.state.token) {
+    if (this.state.token && this.state.btnTxt === '已获取') {
       this.sendData();
     } else {
-      Alert.alert('令牌不能为空！');
+      Alert.alert('请完成所有选项！');
     }
   };
 
@@ -104,6 +139,7 @@ class Address extends PureComponent {
       .then((res) => {
         if (res.data.isUser) {
           console.log(res.data);
+          this.setState({test: '请求数据成功！'});
           this._storeData(this.state.token);
           this.props.dispatch({
             type: 'login',
@@ -112,7 +148,7 @@ class Address extends PureComponent {
           Alert.alert('登录失败，请重新登录！');
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => Alert.alert(err));
   };
 
   _storeData = async (token) => {

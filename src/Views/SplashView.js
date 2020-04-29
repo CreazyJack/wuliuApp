@@ -1,13 +1,13 @@
 import React, {PureComponent} from 'react';
 import {View, StyleSheet, Image, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
-import axios from 'axios';
+import axios from 'react-native-axios';
 
 class SplashView extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <Image style={styles.logo} source={require('./新智慧5.png')} />
+        <Image style={styles.logo} source={require('./新智慧9.png')} />
       </View>
     );
   }
@@ -30,8 +30,8 @@ class SplashView extends PureComponent {
 
   _getStore = async () => {
     try {
-      // const token = await AsyncStorage.getItem('userToken');
-      const token = await AsyncStorage.getItem('test');
+      const token = await AsyncStorage.getItem('userToken');
+      // const token = await AsyncStorage.getItem('test');
       if (token) {
         axios({
           method: 'post',

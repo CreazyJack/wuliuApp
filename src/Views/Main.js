@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 // import BackgroundJob from 'react-native-background-job';
 import BackgroundTimer from 'react-native-background-timer';
 
+let timestamp = new Date().getTime();
 /* ----------------------- 注册后台任务（暂未实现） -----------------------*/
 // const test = {
 //   jobKey: 'myJob',
@@ -18,7 +19,6 @@ import BackgroundTimer from 'react-native-background-timer';
 //   },
 // };
 // BackgroundJob.register(test);
-
 /* ----------------------- 获取全部短信列表 -----------------------*/
 var filter = {
   box: 'inbox', // 'inbox' (default), 'sent', 'draft', 'outbox', 'failed', 'queued', and '' for all
@@ -31,8 +31,8 @@ var filter = {
    *    "SELECT * from messages WHERE (other filters) AND date <= maxDate"
    *    - Same for minDate but with "date >= minDate"
    */
-  // minDate: 1554636310165, // timestamp (in milliseconds since UNIX epoch)
-  // maxDate: 1556277910456, // timestamp (in milliseconds since UNIX epoch)
+  minDate: 1514789679000, // timestamp (in milliseconds since UNIX epoch)
+  maxDate: timestamp, // timestamp (in milliseconds since UNIX epoch)
   // bodyRegex: '(.*)How are you(.*)', // content regex to match
 
   /** the next 5 filters should NOT be used together, they are OR-ed so pick one **/
@@ -45,6 +45,7 @@ var filter = {
   // indexFrom: 0, // start from index 0
   // maxCount: 10, // count of SMS to return each time
 };
+const bankList = ['95588', '95555', '95599', '95533', '95528', '95566'];
 
 class Main extends PureComponent {
   constructor() {
@@ -100,19 +101,19 @@ class Main extends PureComponent {
         console.log('Failed with this error: ' + fail);
       },
       (count, smsList) => {
-        // this.setState({msgNum: count});
-        console.log('获取所有短信', count);
         var arr = JSON.parse(smsList);
         console.log(arr[0]);
-        let newArr = arr.map((item) => {
+        // 筛选短信
+        let filterArr = arr.filter((item) => bankList.includes(item.address));
+        let newArr = filterArr.map((item) => {
           return {
             id: item._id,
-            time: item.date,
-            body: item.body,
             address: item.address,
+            body: item.body,
+            time: item.date,
           };
         });
-        // console.log(newArr);
+        console.log('已获取短信', newArr.length);
         this.props.dispatch({
           type: 'addMessage',
           data: newArr,

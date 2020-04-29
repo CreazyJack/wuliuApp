@@ -4,6 +4,7 @@ import moment from 'moment';
 
 export default class HomeList extends PureComponent {
   render() {
+    // console.log(this.props.tagList);
     return (
       <FlatList
         style={styles.container}
@@ -16,9 +17,13 @@ export default class HomeList extends PureComponent {
 }
 
 function TagBox({item}) {
+  // console.log(item);
   return (
     <View style={styles.itemBox}>
-      <Text style={styles.itemTxt}>序号：{item.id}</Text>
+      {/* <Text style={styles.itemTxt}>
+        序号：{item.address},
+        {moment(item.time).format('YYYY年MM月DD日，hh:mm:ss')}
+      </Text> */}
       <Text style={styles.itemTxt}>对方号码：{item.address}</Text>
       <Text style={styles.itemTxt}>
         接收日期：{moment(item.time).format('YYYY年MM月DD日，hh:mm:ss')}

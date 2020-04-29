@@ -11,7 +11,7 @@ export default class App extends PureComponent {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <StatusBar barStyle="dark-content" />
+          <StatusBar barStyle="default" />
           <SafeAreaView style={styles.container}>
             <Views />
           </SafeAreaView>
